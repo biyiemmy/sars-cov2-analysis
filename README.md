@@ -632,7 +632,7 @@ This pipeline can be applied to:
 - **Raw sequencing data**: NCBI SRA (accessions in `samples.txt`)
 - **CDC benchmark datasets**: https://github.com/CDCgov/datasets-sars-cov-2
 - **Pipeline code**: https://github.com/nf-core/viralrecon
-- **Analysis code**: [[Your GitHub repository](https://github.com/biyiemmy/sars-cov2-analysis)]
+- **Analysis code**: [Your GitHub repository]
 
 ---
 
