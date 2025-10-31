@@ -1,0 +1,2 @@
+task_id	hash	native_id	name	status	exit	submit	duration	realtime	%cpu	peak_rss	peak_vmem	rchar	wchar
+3	b5/937433	35865	NFCORE_VIRALRECON:ILLUMINA:PREPARE_GENOME:COLLAPSE_PRIMERS (nCoV-2019.primer.bed)	ABORTED	-	2025-10-08 15:53:03.329	-	-	-	-	-	-	-
