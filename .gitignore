@@ -1,0 +1,86 @@
+# Nextflow work directory
+work/
+.nextflow/
+.nextflow.log*
+.nextflow.pid
+
+# Large data files
+data/*.fastq
+data/*.fastq.gz
+data/*.fq
+data/*.fq.gz
+*.bam
+*.bam.bai
+
+# Results directory (comment out if you want to track results)
+results/
+
+# Pipeline execution files
+timeline.html
+report.html
+trace.txt
+dag.dot
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+dist/
+build/
+
+# R
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+.*.swp
+.*.swo
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Conda
+.conda/
+
+# Large reference files
+*.fa.gz
+*.fasta.gz
+*.gtf.gz
+*.gff.gz
+
+# Compressed archives
+*.tar.gz
+*.zip
+*.tar
+*.gz
+
+# Exclude specific tracking (uncomment if needed)
+# !data/README.md
+# !results/README.md
