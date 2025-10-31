@@ -632,27 +632,17 @@ This pipeline can be applied to:
 - **Raw sequencing data**: NCBI SRA (accessions in `samples.txt`)
 - **CDC benchmark datasets**: https://github.com/CDCgov/datasets-sars-cov-2
 - **Pipeline code**: https://github.com/nf-core/viralrecon
-- **Analysis code**: [Your GitHub repository]
+- **Analysis code**: [[Your GitHub repository](https://github.com/biyiemmy/sars-cov2-analysis)]
 
 ---
 
 ## Author
 
-**[Your Name]**  
-*[Your Institution/University]*  
-*[Your Program/Department]*
+**Name: Emmanuel Oluwatosin Adebiyi**  
 
 **Contact:**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-- LinkedIn: [Your LinkedIn Profile]
-
-**Date:** October 2024
-
-**Acknowledgments:**
-- CDC Technical Outreach and Assistance for States Team (TOAST) for benchmark datasets
-- nf-core community for pipeline development and maintenance
-- FutureLearn and course instructors for training materials
+- GitHub: [@biyiemmy](https://github.com/biyiemmy)
+- LinkedIn: [https://www.linkedin.com/in/adebiyiemmanuel/]
 
 ---
 
@@ -682,8 +672,4 @@ sars-cov2-analysis/
 
 **Project Status:** ✅ Complete | Pipeline Validated | Results Available
 
-**License:** MIT License - see LICENSE file for details
-
 ---
-
-*For questions or issues, please open an issue on GitHub or contact the author directly.*
