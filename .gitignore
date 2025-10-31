@@ -12,8 +12,6 @@ data/*.fq.gz
 *.bam
 *.bam.bai
 
-# Results directory (comment out if you want to track results)
-results/
 
 # Pipeline execution files
 timeline.html
