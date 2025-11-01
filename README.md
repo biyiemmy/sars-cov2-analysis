@@ -1,3 +1,81 @@
+---
+
+## Results
+
+### Pipeline Outputs
+
+The nf-core/viralrecon pipeline generated the following key results:
+
+#### 1. Quality Control Reports
+- **MultiQC Report**: `results/viralrecon/multiqc/multiqc_report.html`
+  - Aggregated quality metrics for all samples
+  - Read quality scores, adapter content, GC distribution
+  - Mapping statistics and coverage plots
+  - Interactive HTML report for easy visualization
+
+#### 2. Consensus Genome Sequences
+- **Location**: `results/viralrecon/consensus/bcftools/`
+- **Format**: FASTA files (one per sample)
+- **Files**:
+  - `<sample>.consensus.fa` - High-quality consensus sequences
+  - `<sample>.consensus.masked.fa` - Consensus with low-coverage regions masked
+- **Expected genome length**: ~29,900 bp (SARS-CoV-2 full genome)
+
+#### 3. Variant Calls
+- **Location**: `results/viralrecon/variants/ivar/`
+- **Format**: TSV and VCF files
+- **Content**: Single nucleotide variants (SNVs) and insertions/deletions (indels) relative to reference genome
+
+#### 4. Alignment Files
+- **Location**: `results/viralrecon/mapping/`
+- **Format**: Sorted and indexed BAM files
+- **Use**: Visualization in genome browsers (IGV, IGV.js)
+
+### Additional Analysis Outputs
+
+#### R Analysis Results
+
+Generated from downstream variant analysis in R:
+
+6. **Summary Statistics Tables**
+   - `summary_statistics.csv` - Depth statistics per sample
+   - `effect_summary.csv` - Variant effect counts per sample
+
+7. **Visualization Figures**
+   - `figures/depth_boxplot.png` - Depth distribution across samples
+   - `figures/depth_per_chromosome.png` - Chromosome-level coverage
+   - `figures/variant_effects.png` - Effect types per sample
+   - `figures/depth_vs_position.png` - Genome-wide depth profile
+   - `figures/dp_vs_altdp.png` - Total vs alternative allele depth
+
+### Work Directory Management
+
+**Important:** The pipeline creates a `work/` directory containing intermediate files.
+
+```bash
+# Check work directory size
+du -sh work
+
+# Expected output: ~4-5GB (even for 5 samples)
+```
+
+After confirming successful pipeline completion:
+
+```bash
+# Remove work directory to save space
+rm -rf work
+
+# This is safe once you have verified all results are correct
+```
+
+⚠️ **Warning:** Only delete `work/` after:
+- Pipeline completed successfully
+- MultiQC report reviewed
+- All expected outputs verified
+- Results backed up if needed
+
+---
+
 ### Results Visualization
 
 #### Figure 1: MultiQC Dashboard Overview
@@ -59,6 +137,108 @@
 - Sample ERR5181310 shows predominantly yellow (log10 = 4-5), consistent with 5,790× median coverage
 - Few dark spots indicate occasional amplicon dropout (normal for ARTIC protocol)
 - Overall uniform coverage across the genome demonstrates successful amplicon sequencing
+
+#### Figure 6: R Analysis - Depth per Chromosome (Faceted Boxplots)
+![Chromosome Depth](images/r_depth_chromosome_boxplot.png)
+
+**Description:** Faceted boxplot showing sequencing depth distribution separated by sample, revealing chromosome-level (reference genome MN908947.3 - SARS-CoV-2) depth patterns:
+- Each panel represents one sample
+- All samples show variants mapping to single chromosome (complete viral genome)
+- ERR5181310: Dramatically higher median (~3,000×) and wider IQR compared to others
+- ERR5405022, ERR5556343, ERR5743893, SRR13500958: Consistent lower depths (600-1,000×)
+- Demonstrates uniform single-chromosome viral genome structure
+
+#### Figure 7: R Analysis - Violin + Boxplot Combination
+![Violin Plot](images/r_depth_chromosome_violin.png)
+
+**Description:** Advanced visualization combining violin plots with embedded boxplots:
+- **Violin shape**: Shows probability density of depth values at different levels
+- **Embedded boxplot**: Displays quartiles and median within each violin
+- ERR5181310: Wide, tall violin indicating high variability and higher depths
+- Other samples: Narrower violins concentrated at lower depths
+- **Statistical insight**: Distribution shape reveals data concentration patterns not visible in boxplots alone
+
+#### Figure 8: R Analysis - Variant Effects Stacked Bar Chart
+![Variant Effects Stacked](images/r_effects_stacked.png)
+
+**Description:** Stacked horizontal bar chart showing distribution of variant effect types across samples:
+- **X-axis**: Count of variants
+- **Y-axis**: Effect types (missense, synonymous, stop_gained, etc.)
+- **Colors**: Different samples (red, orange, white/beige, light blue, dark blue)
+- **Key finding**: Missense variants dominate (~85+ variants total across samples)
+- **Synonymous variants**: Second most common (~20+ variants)
+- **Rare effects**: Stop codons (gained/lost), indels, upstream/downstream variants (1-5 each)
+- Shows comprehensive variant annotation from iVar/BCFtools analysis
+
+#### Figure 9: R Analysis - Variant Effects Horizontal Bar Chart
+![Variant Effects Horizontal](images/r_effects_horizontal.png)
+
+**Description:** Alternative visualization of variant effects as separated horizontal bars:
+- **Clearer separation**: Each sample contribution visible without stacking
+- **Missense variants**: Dominate with 60-90 counts (combined across all samples)
+- **Effect hierarchy clearly visible**:
+  1. Missense (protein-changing) - Most common
+  2. Synonymous (silent) - Second most common
+  3. Upstream gene variants - Regulatory regions
+  4. Stop lost/gained - Rare but important
+  5. Indels - Conservative/disruptive frame shifts
+- **Sample contribution**: Each color shows individual sample's contribution to effect type
+
+#### Figure 10: R Analysis - Depth Across Genome Position
+![Position Scatter](images/r_depth_position.png)
+
+**Description:** Scatter plot showing sequencing depth (DP) vs genome position (0-30,000 bp):
+- **X-axis**: Position along SARS-CoV-2 genome (~29,900 bp total)
+- **Y-axis**: Sequencing depth (0-42,000×)
+- **Sample colors**: Red (ERR5181310), orange, white, light blue, dark blue
+- **Key observations**:
+  - **ERR5181310 (red)**: Multiple high-depth outliers (15,000-42,000×) scattered across genome
+  - **Most variants**: Clustered in 0-5,000× range (dense lower region)
+  - **Genome coverage**: Variants distributed across entire genome length
+  - **Hotspot regions**: Some clustering visible around positions 0-5k and 25-30k
+- Demonstrates complete genome coverage with variable depth
+
+#### Figure 11: R Analysis - Total Depth vs Alternative Allele Depth
+![DP vs ALT_DP Black](images/r_dp_vs_altdp_black.png)
+
+**Description:** Correlation plot showing relationship between total depth (DP) and alternative allele depth (ALT_DP):
+- **Perfect linear correlation**: Strong diagonal line from origin
+- **Interpretation**: ALT_DP increases proportionally with total DP
+- **Data quality indicator**: Linear relationship confirms consistent variant calling
+- **Outliers**: Few points deviate from line (potential heteroplasmy or sequencing errors)
+- **Most variants**: Cluster in 0-10,000× range
+- **Single outlier**: One variant at ~42,000× total depth
+
+#### Figure 12: R Analysis - DP vs ALT_DP (Sample-Colored)
+![DP vs ALT_DP Colored](images/r_dp_vs_altdp_colored.png)
+
+**Description:** Same correlation plot with sample-specific coloring:
+- **ERR5181310 (red circles)**: High-depth variants (>15,000×) exclusively from this sample
+- **Lower-depth cluster**: Mixed colors showing all samples contribute variants in 0-10,000× range
+- **Sample separation visible**: Red points stand out at high depths
+- **Diagnostic value**: Color coding reveals sample-specific depth patterns
+- **Consistent relationship**: All samples follow same linear DP vs ALT_DP correlation
+
+**Key Statistical Findings from Additional R Plots:**
+
+| Metric | Value | Significance |
+|--------|-------|--------------|
+| **Most common variant effect** | Missense | ~85 variants (60% of total) |
+| **Synonymous variants** | ~20 | Silent mutations, no protein change |
+| **Stop codon changes** | 2-3 | Rare but functionally important |
+| **Genome coverage** | 0-29,900 bp | Complete SARS-CoV-2 genome |
+| **DP-ALT_DP correlation** | R² ≈ 1.0 | Perfect linear relationship |
+| **High-depth outliers** | 15,000-42,000× | Exclusively from ERR5181310 |
+
+**Advanced R Skills Demonstrated:**
+- ✅ Faceted plotting (multiple panels)
+- ✅ Violin plots with embedded boxplots
+- ✅ Stacked and grouped bar charts
+- ✅ Scatter plots with sample coloring
+- ✅ Genome-wide visualization
+- ✅ Correlation analysis
+- ✅ Multi-panel layout design
+- ✅ Professional color schemes
 
 ---# SARS-CoV-2 Genomic Analysis using nf-core/viralrecon
 
@@ -332,10 +512,340 @@ ls
 **Key output directories:**
 - `multiqc/` - Comprehensive quality control reports
 - `variants/` - Variant calls (VCF/TSV format)
+- `variants_long_table/` - Combined variant table for all samples (CSV)
 - `consensus/` - High-quality consensus genome sequences (FASTA)
 - `mapping/` - Read alignment files (BAM)
 - `mosdepth/` - Coverage statistics
 - `pipeline_info/` - Execution logs and resource usage
+
+### Step 9: Clean Up Work Directory
+
+The pipeline creates a `work/` directory containing intermediate files. After successful completion, this can be deleted to save disk space:
+
+```bash
+# Check work directory size
+du -sh work
+
+# Expected output: ~4GB or more (even for 5 samples)
+
+# Remove work directory
+rm -rf work
+```
+
+**Important:** Only delete `work/` after confirming the pipeline completed successfully and you have all desired results!
+
+---
+
+## 📊 Downstream Analysis in R
+
+After pipeline completion, perform statistical analysis and visualization using R.
+
+### R Setup
+
+#### Step 1: Install R and RStudio
+
+Download and install:
+- **R**: https://cran.r-project.org/
+- **RStudio**: https://posit.co/download/rstudio-desktop/
+
+#### Step 2: Create RStudio Project
+
+1. Open RStudio
+2. File → New Project
+3. Choose "New Directory"
+4. Select "New Project"
+5. Name: `sars-cov2-analysis`
+6. Choose location (your project directory)
+7. Click "Create Project"
+
+#### Step 3: Verify Working Directory
+
+```r
+# Check current working directory
+getwd()
+
+# Should show: "/path/to/sars-cov2-analysis"
+```
+
+#### Step 4: Install Required Packages
+
+```r
+# Install tidyverse suite (includes ggplot2, dplyr, tidyr)
+install.packages("tidyverse")
+
+# Install additional packages
+install.packages("ggpubr")
+install.packages("RColorBrewer")
+
+# Load libraries
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+```
+
+### Variant Analysis Workflow
+
+#### Load Data
+
+```r
+# Load the combined variants table from viralrecon
+var <- read.csv("results/viralrecon/variants_long_table/combined_variants.csv")
+
+# Preview the data
+head(var)
+
+# Check dimensions
+dim(var)    # rows × columns
+nrow(var)   # number of variants
+ncol(var)   # number of variables
+
+# View structure
+str(var)
+
+# Summary statistics
+summary(var)
+```
+
+#### Data Exploration
+
+```r
+# Check column names
+colnames(var)
+
+# Convert to tibble for better printing
+var_tb <- as_tibble(var)
+
+# Count variants per sample
+var_tb %>% count(SAMPLE, sort = TRUE)
+
+# Count variants per gene per sample
+var_tb %>% count(SAMPLE, GENE, sort = TRUE) %>% head()
+
+# Check depth statistics
+max(var_tb$DP)    # Maximum depth
+min(var_tb$DP)    # Minimum depth
+mean(var_tb$DP)   # Mean depth
+
+# Depth statistics per sample
+var_tb %>% group_by(SAMPLE) %>% summarize(
+  max_depth = max(DP),
+  min_depth = min(DP),
+  mean_depth = mean(DP)
+)
+```
+
+#### Data Filtering and Selection
+
+```r
+# Select specific columns
+select(var_tb, SAMPLE, REF, ALT, DP) %>% head()
+
+# Filter for specific sample
+filter(var_tb, SAMPLE == "SRR13500958") %>% 
+  select(CHROM, POS, REF, ALT, DP)
+
+# Filter by depth threshold
+var_tb %>% 
+  filter(SAMPLE == "SRR13500958" & DP >= 500) %>% 
+  select(CHROM, POS, REF, ALT, DP)
+
+# High-confidence variants (DP ≥ 1000)
+var_tb %>% 
+  filter(SAMPLE == "SRR13500958" & DP >= 1000) %>% 
+  select(CHROM, POS, REF, ALT, DP)
+```
+
+#### Data Transformation
+
+```r
+# Log2 transformation of depth
+var_tb_log <- var_tb %>% mutate(DP_log2 = log2(DP))
+
+# View transformed data
+select(var_tb_log, SAMPLE, REF, ALT, DP, DP_log2) %>% head()
+```
+
+### Data Visualization
+
+#### 1. Depth Distribution per Sample
+
+```r
+# Basic boxplot
+ggplot(data = var_tb, aes(x = SAMPLE, y = DP)) + 
+  geom_boxplot()
+
+# Boxplot with limits
+ggplot(data = var_tb, aes(x = SAMPLE, y = DP)) + 
+  geom_boxplot() + 
+  ylim(0, 10000)
+
+# Colored boxplot
+ggplot(data = var_tb, aes(x = SAMPLE, y = DP, fill = SAMPLE)) + 
+  geom_boxplot() + 
+  ylim(0, 10000) + 
+  scale_fill_brewer(palette = "RdYlBu") +
+  theme(legend.position = "bottom") +
+  labs(title = "Depth Distribution per Sample",
+       x = "Sample", y = "Depth (DP)")
+
+# Log-scale visualization
+ggplot(data = var_tb, aes(x = SAMPLE, y = DP)) + 
+  geom_boxplot() + 
+  scale_y_log10() +
+  labs(title = "Depth Distribution (log scale)")
+```
+
+#### 2. Depth per Chromosome
+
+```r
+# Define plotting theme
+p_DP_CHROM <- ggplot(data = var_tb, aes(x = CHROM, y = DP, fill = SAMPLE)) + 
+  ylim(0, 10000) + 
+  scale_fill_brewer(palette = "RdYlBu") + 
+  labs(title = "Depth per Chromosome") + 
+  theme(legend.position = "bottom")
+
+# Boxplot with faceting
+p_DP_CHROM + 
+  geom_boxplot() + 
+  facet_grid(. ~ SAMPLE)
+
+# Violin + boxplot combination
+p_DP_CHROM + 
+  geom_violin(trim = FALSE) + 
+  facet_grid(. ~ SAMPLE) + 
+  geom_boxplot(width = 0.1)
+```
+
+#### 3. Variant Effects Analysis
+
+```r
+# Count variant effects
+var_tb %>% count(EFFECT)
+
+# Effects per sample
+var_tb %>% count(EFFECT, SAMPLE, sort = TRUE)
+
+# Visualize variant effects
+p_EFFECT <- ggplot(data = var_tb, aes(y = EFFECT, fill = SAMPLE)) + 
+  scale_fill_brewer(palette = "RdBu") + 
+  labs(title = "Variant Effects per Sample") + 
+  theme(legend.position = "bottom")
+
+p_EFFECT + geom_bar()
+```
+
+#### 4. Stop Codon Variants
+
+```r
+# Filter for stop codon changes
+stop_variants <- filter(var_tb, 
+                        EFFECT %in% c("stop_lost", "stop_gained")) %>% 
+                 select(SAMPLE, CHROM, GENE, EFFECT, POS)
+
+# View stop variants
+stop_variants
+
+# Count stop variants per gene
+stop_variants %>% count(GENE, EFFECT, sort = TRUE)
+```
+
+#### 5. Depth vs Position
+
+```r
+# Depth across genome positions
+p_DP_POS <- ggplot(data = var_tb, aes(x = POS, y = DP, fill = SAMPLE)) + 
+  scale_fill_brewer(palette = "RdBu") + 
+  labs(title = "Depth per Position",
+       x = "Genome Position (bp)",
+       y = "Depth (DP)") + 
+  theme(legend.position = "bottom")
+
+# Scatter plot with transparency
+p_DP_POS + 
+  geom_point(shape = 21, size = 5, alpha = 0.7)
+```
+
+#### 6. Depth vs Alternative Allele Depth
+
+```r
+# DP vs ALT_DP relationship
+ggplot(data = var_tb, aes(x = ALT_DP, y = DP, fill = SAMPLE)) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(title = "Total Depth vs Alternative Allele Depth",
+       x = "Alternative Allele Depth",
+       y = "Total Depth") +
+  theme(legend.position = "bottom") +
+  geom_point(shape = 21, size = 5, alpha = 0.7)
+```
+
+#### 7. Advanced Visualization
+
+```r
+# Custom color palette
+ggplot(data = var_tb, aes(x = SAMPLE, y = DP, fill = SAMPLE)) + 
+  geom_boxplot() + 
+  ylim(0, 10000) + 
+  scale_fill_manual(values = c("#cb6015", "#e1ad01", "#6d0016", 
+                                "#808000", "#4e3524")) +
+  labs(title = "Depth Distribution with Custom Colors") +
+  theme(legend.position = "none")
+
+# View all available color palettes
+display.brewer.all()
+
+# View all point shapes
+show_point_shapes()
+```
+
+### Save Plots
+
+```r
+# Save current plot
+ggsave("depth_distribution.png", width = 10, height = 6, dpi = 300)
+
+# Save specific plot
+p_final <- ggplot(data = var_tb, aes(x = SAMPLE, y = DP, fill = SAMPLE)) + 
+  geom_boxplot() + 
+  ylim(0, 10000) + 
+  scale_fill_brewer(palette = "RdYlBu") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  labs(title = "Sequencing Depth Distribution across Samples",
+       x = "Sample ID", y = "Depth (DP)")
+
+ggsave("figures/depth_boxplot.png", plot = p_final, 
+       width = 12, height = 8, dpi = 300)
+```
+
+### Generate Analysis Report
+
+```r
+# Create summary statistics table
+summary_stats <- var_tb %>%
+  group_by(SAMPLE) %>%
+  summarize(
+    n_variants = n(),
+    mean_depth = mean(DP),
+    median_depth = median(DP),
+    max_depth = max(DP),
+    min_depth = min(DP)
+  )
+
+# View summary
+summary_stats
+
+# Export to CSV
+write.csv(summary_stats, "summary_statistics.csv", row.names = FALSE)
+
+# Effect summary
+effect_summary <- var_tb %>%
+  count(SAMPLE, EFFECT) %>%
+  pivot_wider(names_from = EFFECT, values_from = n, values_fill = 0)
+
+write.csv(effect_summary, "effect_summary.csv", row.names = FALSE)
+```
 
 ---
 
@@ -596,11 +1106,21 @@ This pipeline can be applied to:
 
 ## Author
 
-**Name: Emmanuel Oluwatosin Adebiyi**  
+**[Your Name]**  
+*[Your Institution/University]*  
+*[Your Program/Department]*
 
 **Contact:**
-- GitHub: [@biyiemmy](https://github.com/biyiemmy)
-- LinkedIn: [https://www.linkedin.com/in/adebiyiemmanuel/]
+- GitHub: [@yourusername](https://github.com/yourusername)
+- Email: your.email@example.com
+- LinkedIn: [Your LinkedIn Profile]
+
+**Date:** October 2024
+
+**Acknowledgments:**
+- CDC Technical Outreach and Assistance for States Team (TOAST) for benchmark datasets
+- nf-core community for pipeline development and maintenance
+- FutureLearn and course instructors for training materials
 
 ---
 
@@ -608,26 +1128,57 @@ This pipeline can be applied to:
 
 ```
 sars-cov2-analysis/
-├── data/                          # Raw FASTQ files (gitignored)
+├── data/                           # Raw FASTQ files (gitignored)
 │   ├── ERR5556343_1.fastq.gz
 │   ├── ERR5556343_2.fastq.gz
-│   └── ...
-├── results/                       # Analysis outputs (gitignored)
+│   └── ... (10 files total)
+├── results/                        # Analysis outputs (gitignored)
 │   └── viralrecon/
-│       ├── multiqc/
-│       ├── consensus/
-│       ├── variants/
-│       └── ...
-├── samples.txt                    # SRA accession list
-├── samplesheet.csv               # Pipeline input manifest
-├── fastq_dir_to_samplesheet.py  # Samplesheet generator script
-├── .gitignore                    # Git exclusions
-├── LICENSE                       # MIT License
-└── README.md                     # This file
+│       ├── multiqc/                # Quality control reports
+│       ├── consensus/              # Consensus sequences
+│       ├── variants/               # Variant calls
+│       ├── variants_long_table/    # Combined variants CSV
+│       ├── mapping/                # BAM files
+│       ├── mosdepth/               # Coverage statistics
+│       └── pipeline_info/          # Execution logs
+├── figures/                        # R-generated plots
+│   ├── depth_distribution_boxplot.png
+│   ├── depth_per_chromosome.png
+│   ├── variant_effects.png
+│   ├── depth_vs_position.png
+│   └── dp_vs_altdp.png
+├── tables/                         # R-generated summaries
+│   ├── depth_statistics.csv
+│   ├── effect_summary.csv
+│   └── gene_variant_summary.csv
+├── images/                         # MultiQC screenshots for README
+│   ├── multiqc_dashboard.png
+│   ├── variant_metrics.png
+│   ├── quality_histograms.png
+│   ├── coverage_summary.png
+│   └── amplicon_heatmap.png
+├── scripts/                        # Analysis scripts
+│   ├── 01_download_data.sh
+│   ├── 02_prepare_samplesheet.sh
+│   └── 03_run_pipeline.sh
+├── variant_analysis.R              # Complete R analysis script
+├── samples.txt                     # SRA accession list
+├── samplesheet.csv                 # Pipeline input manifest
+├── fastq_dir_to_samplesheet.py    # Samplesheet generator
+├── environment.yml                 # Conda environment
+├── .gitignore                      # Git exclusions
+├── QUICKSTART.md                   # Quick reference guide
+├── TROUBLESHOOTING.md              # Debugging guide
+├── LICENSE                         # MIT License
+└── README.md                       # This file
 ```
 
 ---
 
 **Project Status:** ✅ Complete | Pipeline Validated | Results Available
 
+**License:** MIT License - see LICENSE file for details
+
 ---
+
+*For questions or issues, please open an issue on GitHub or contact the author directly.*
