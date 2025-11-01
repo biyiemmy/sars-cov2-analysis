@@ -1111,11 +1111,8 @@ This pipeline can be applied to:
 *[Your Program/Department]*
 
 **Contact:**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-- LinkedIn: [Your LinkedIn Profile]
-
-**Date:** October 2024
+- GitHub: [@biyiemmy](https://github.com/biyiemmy)
+- LinkedIn: [[Your LinkedIn Profile](https://www.linkedin.com/in/adebiyiemmanuel/)]
 
 **Acknowledgments:**
 - CDC Technical Outreach and Assistance for States Team (TOAST) for benchmark datasets
@@ -1176,8 +1173,6 @@ sars-cov2-analysis/
 ---
 
 **Project Status:** ✅ Complete | Pipeline Validated | Results Available
-
-**License:** MIT License - see LICENSE file for details
 
 ---
 
