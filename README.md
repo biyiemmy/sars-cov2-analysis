@@ -1,5 +1,3 @@
----
-
 ## Results
 
 ### Pipeline Outputs
