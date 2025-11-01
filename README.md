@@ -1104,16 +1104,16 @@ This pipeline can be applied to:
 
 ## Author
 
-**Emmanuel Adebiyi**  
+**Emmanuel Adebiyi**
 
 **Contact:**
-- GitHub: [@biyiemmy](https://github.com/biyiemmy)
-- LinkedIn: [[Your LinkedIn Profile](https://www.linkedin.com/in/adebiyiemmanuel/)]
+- GitHub: [github.com/biyiemmy](https://github.com/biyiemmy)
+- LinkedIn: [Emmanuel Adebiyi](https://www.linkedin.com/in/adebiyiemmanuel/)
 
 **Acknowledgments:**
 - CDC Technical Outreach and Assistance for States Team (TOAST) for benchmark datasets
 - nf-core community for pipeline development and maintenance
-- FutureLearn and course instructors for training materials
+- FutureLearn Bioinformatics course for training materialss
 
 ---
 

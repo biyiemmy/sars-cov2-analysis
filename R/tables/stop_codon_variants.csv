@@ -1,0 +1,5 @@
+"SAMPLE","CHROM","GENE","EFFECT","POS","REF","ALT"
+"ERR5181310","MN908947.3","orf1ab","stop_lost",20724,"A","G"
+"ERR5405022","MN908947.3","ORF8","stop_gained",27972,"C","T"
+"ERR5743893","MN908947.3","orf1ab","stop_lost",17523,"G","T"
+"ERR5743893","MN908947.3","orf1ab","stop_lost",18210,"G","T"
