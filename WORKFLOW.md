@@ -337,36 +337,11 @@ ggsave("plot.png", width=10, height=6, dpi=300)
 
 ---
 
-## ✅ Success Checklist
-
-**Pipeline Completion:**
-- [ ] All 5 samples processed
-- [ ] MultiQC report generated
-- [ ] Consensus sequences created
-- [ ] No error messages in log
-- [ ] Coverage >98% for all samples
-
-**R Analysis Completion:**
-- [ ] Variant data loaded successfully
-- [ ] 8 plots generated in figures/
-- [ ] 4 tables exported to tables/
-- [ ] No errors in script execution
-- [ ] Plots are publication-quality
-
-**Documentation:**
-- [ ] README completed with your info
-- [ ] Images added to repository
-- [ ] All scripts are executable
-- [ ] Repository is public on GitHub
-- [ ] .gitignore is working properly
-
----
-
 ## 📝 Citation
 
 **This Project:**
 ```
-[Your Name]. (2024). SARS-CoV-2 Genomic Surveillance Pipeline. 
+Emmanuel Oluwatosin Adebiyi. (2025). SARS-CoV-2 Genomic Surveillance Pipeline. 
 GitHub repository: https://github.com/yourusername/sars-cov2-analysis
 ```
 
